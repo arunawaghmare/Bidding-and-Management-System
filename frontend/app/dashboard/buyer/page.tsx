@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import axios from "@/lib/api";
-import { useRouter } from "next/navigation";
 
 type Project = {
   id: number;
@@ -23,7 +22,6 @@ type Bid = {
 };
 
 export default function BuyerDashboard() {
-  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null

@@ -1,6 +1,8 @@
 "use client";
+
 import { useState } from "react";
-import axios from "@/lib/api";
+import axiosInstance from "@/lib/api";
+import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -9,12 +11,16 @@ export default function LoginPage() {
 
   const login = async () => {
     try {
-      const res = await axios.post("/auth/login", form);
+      const res = await axiosInstance.post("/auth/login", form);
       localStorage.setItem("token", res.data.token);
       const role = res.data.user.role.toLowerCase();
       router.push(`/dashboard/${role}`);
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Login failed");
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        alert(err.response?.data?.message || "Login failed");
+      } else {
+        alert("Login failed due to unexpected error.");
+      }
     }
   };
 

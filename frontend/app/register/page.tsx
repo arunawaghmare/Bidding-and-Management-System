@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import axios from "@/lib/api";
+import axiosInstance from "@/lib/api";
+import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
@@ -14,11 +15,15 @@ export default function RegisterPage() {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("/auth/signup", form);
-      alert("User registered successfully");
+      await axiosInstance.post("/auth/signup", form);
+      alert("✅ User registered successfully");
       router.push("/login");
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Registration failed");
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        alert(err.response?.data?.message || "Registration failed");
+      } else {
+        alert("Registration failed due to unexpected error.");
+      }
     }
   };
 

@@ -31,8 +31,8 @@ export default function SellerPage() {
     try {
       const res = await axios.get("/projects");
       setProjects(res.data);
-    } catch (err) {
-      console.error("Error fetching projects:", err);
+    } catch {
+      console.error("Error fetching projects");
     }
   };
 
@@ -59,7 +59,7 @@ export default function SellerPage() {
       setForm({ ...form, amount: "", timeFrame: "", message: "" });
       setSelectedProjectId(null);
       fetchProjects();
-    } catch (err) {
+    } catch {
       alert("❌ Failed to submit bid.");
     }
   };
@@ -82,7 +82,7 @@ export default function SellerPage() {
       });
       alert("✅ Project marked completed!");
       fetchProjects();
-    } catch (err) {
+    } catch {
       alert("❌ Upload failed.");
     }
   };
@@ -141,7 +141,7 @@ export default function SellerPage() {
           ))}
       </section>
 
-      {/* COMPLETED Projects for Review */}
+      {/* COMPLETED Projects */}
       <section className="space-y-6 mb-10">
         <h2 className="text-2xl font-semibold text-yellow-600 mb-2">
           🌟 Completed Projects (Leave Review)
@@ -233,7 +233,7 @@ export default function SellerPage() {
         )}
       </section>
 
-      {/* Bid Submission Form */}
+      {/* Bid Form */}
       {selectedProjectId && (
         <section className="bg-white p-6 rounded-xl shadow max-w-2xl mx-auto">
           <h2 className="text-xl font-semibold text-green-700 mb-4">
