@@ -13,7 +13,10 @@ const app = express();
 // ✅ CORS Setup: Allow Vercel frontend
 app.use(
   cors({
-    origin: "https://bidding-and-management-system-m45wflrbx.vercel.app",
+    origin: [
+      "https://bidding-and-management-system-m45wflrbx.vercel.app",
+      "https://bidding-and-management-system.vercel.app",
+    ],
     credentials: true,
   })
 );
