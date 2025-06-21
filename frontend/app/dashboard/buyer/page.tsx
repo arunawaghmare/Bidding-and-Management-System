@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "@/lib/api";
+import { AxiosError } from "axios";
 
 type Project = {
   id: number;
@@ -50,15 +51,16 @@ export default function BuyerDashboard() {
       alert("✅ Project posted successfully");
       setFormData({ title: "", description: "", budget: "", deadline: "" });
       fetchProjects();
-    } catch (err: any) {
-      alert(err?.response?.data?.message || "❌ Failed to post project");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message: string }>;
+      alert(error?.response?.data?.message || "❌ Failed to post project");
     }
   };
 
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("/projects", {
+      const res = await axios.get<Project[]>("/projects", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProjects(res.data);
@@ -69,7 +71,7 @@ export default function BuyerDashboard() {
 
   const fetchBids = async (projectId: number) => {
     try {
-      const res = await axios.get(`/bids/${projectId}`);
+      const res = await axios.get<Bid[]>(`/bids/${projectId}`);
       setSelectedProjectId(projectId);
       setBids(res.data);
     } catch (err) {
@@ -90,8 +92,9 @@ export default function BuyerDashboard() {
       fetchProjects();
       setBids([]);
       setSelectedProjectId(null);
-    } catch (err: any) {
-      alert(err?.response?.data?.message || "❌ Failed to select seller");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message: string }>;
+      alert(error?.response?.data?.message || "❌ Failed to select seller");
     }
   };
 
