@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id              Int       @id @default(autoincrement())
+  name            String
+  email           String    @unique
+  password        String
+  role            Role
+  bids            Bid[]
+  projects        Project[] @relation("BuyerProjects")
+  sellerProjects  Project[] @relation("SellerProjects") // 🛠️ Add this line
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  budget      Int
+  deadline    DateTime
+  status      Status    @default(PENDING)
+  buyerId     Int
+  sellerId    Int?
+  bids        Bid[]
+  deliverable String?
+  buyer       User      @relation("BuyerProjects", fields: [buyerId], references: [id])
+  seller      User?     @relation("SellerProjects", fields: [sellerId], references: [id]) // 🛠️ This must match
+  reviews     Review[]
+}
+
+model Bid {
+  id              Int    @id @default(autoincrement())
+  sellerName      String
+  amount          Int
+  completionTime  String
+  message         String
+  projectId       Int
+  sellerId        Int
+  project         Project @relation(fields: [projectId], references: [id])
+  seller          User    @relation(fields: [sellerId], references: [id])
+}
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+
+  comment   String
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+  createdAt DateTime @default(now())
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum Role {
+  BUYER
+  SELLER
+}
