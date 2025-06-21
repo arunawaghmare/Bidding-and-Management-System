@@ -1,7 +1,7 @@
 import prisma from "../utils/prisma.js";
 import sendMail from "../utils/mailer.js";
 
-// ✅ CREATE PROJECT (Buyer only)
+// ✅ CREATE PROJECT
 export const createProject = async (req, res) => {
   const { title, description, budget, deadline } = req.body;
 
@@ -26,6 +26,7 @@ export const createProject = async (req, res) => {
         budget: parsedBudget,
         deadline: parsedDeadline,
         buyerId: req.user.id,
+        status: "PENDING",
       },
     });
 
@@ -38,7 +39,7 @@ export const createProject = async (req, res) => {
   }
 };
 
-// ✅ SELECT SELLER (Buyer only)
+// ✅ SELECT SELLER
 export const selectSeller = async (req, res) => {
   const { projectId, sellerId } = req.body;
 
@@ -73,13 +74,13 @@ export const selectSeller = async (req, res) => {
   }
 };
 
-// ✅ COMPLETE PROJECT (Seller uploads file)
+// ✅ COMPLETE PROJECT + UPLOAD FILE
 export const completeProject = async (req, res) => {
-  const { projectId } = req.body;
+  const { projectId } = req.params;
   const file = req.file;
 
-  if (!projectId || !file) {
-    return res.status(400).json({ message: "projectId and file are required" });
+  if (!file) {
+    return res.status(400).json({ message: "No file uploaded" });
   }
 
   try {
@@ -102,19 +103,19 @@ export const completeProject = async (req, res) => {
       await sendMail(
         buyer.email,
         "Project Marked as Completed",
-        `Please review the final deliverable for project: ${project.title}`
+        `Please review the deliverables submitted for project: ${project.title}`
       );
     }
 
     if (seller?.email) {
       await sendMail(
         seller.email,
-        "Project Completed",
-        `You have successfully completed the project: ${project.title}`
+        "Project Successfully Completed",
+        `You have submitted your deliverables for: ${project.title}`
       );
     }
 
-    res.status(200).json(project);
+    res.status(200).json({ message: "Project marked as completed", project });
   } catch (error) {
     console.error("Complete Project Error:", error);
     res
@@ -122,18 +123,16 @@ export const completeProject = async (req, res) => {
       .json({ message: "Failed to complete project", error: error.message });
   }
 };
-// ✅ GET ALL PROJECTS (public)
+
+// ✅ GET ALL PROJECTS
 export const getAllProjects = async (req, res) => {
   try {
     const projects = await prisma.project.findMany({
       include: {
-        bids: {
-          include: {
-            seller: true,
-          },
-        },
+        bids: { include: { seller: true } },
         buyer: true,
         seller: true,
+        reviews: true,
       },
     });
 

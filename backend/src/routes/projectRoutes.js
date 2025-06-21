@@ -1,20 +1,24 @@
-// src/routes/projectRoutes.js
+// routes/projectRoutes.js
 import express from "express";
-import multer from "multer";
-
+import auth from "../middelware/authMiddleware.js";
+import upload from "../middelware/upload.js";
 import {
   createProject,
   selectSeller,
   completeProject,
   getAllProjects,
 } from "../controllers/projectController.js";
-import auth from "../middelware/authMiddleware.js";
-const router = express.Router();
-const upload = multer({ dest: "uploads/" });
-router.get("/", getAllProjects);
 
+const router = express.Router();
+
+router.get("/", getAllProjects);
 router.post("/", auth, createProject);
 router.post("/select", auth, selectSeller);
-router.post("/complete", auth, upload.single("file"), completeProject);
+router.post(
+  "/complete/:projectId",
+  auth,
+  upload.single("file"),
+  completeProject
+);
 
 export default router;

@@ -30,6 +30,7 @@ app.use("/api/projects", projectRoutes); // GET /api/projects
 app.use("/api/bids", bidRoutes); // POST /api/bids
 app.use("/api", reviewRoutes); // GET /api/reviews/me etc.
 
+
 // ✅ Default fallback route (optional)
 app.get("/", (req, res) => {
   res.send("Seller-Buyer Bidding System API is running.");
