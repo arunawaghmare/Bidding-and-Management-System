@@ -14,6 +14,7 @@ const app = express();
 app.use(
   cors({
     origin: ["https://bidding-and-management-system-qt4296d2m.vercel.app/"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
