@@ -15,7 +15,7 @@ router.get("/", getAllProjects);
 router.post("/", auth, createProject);
 router.post("/select", auth, selectSeller);
 router.post(
-  "/projects/complete/:projectId",
+  "/complete/:projectId",
   auth,
   upload.single("file"),
   completeProject
