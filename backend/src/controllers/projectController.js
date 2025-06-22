@@ -118,11 +118,13 @@ export const completeProject = async (req, res) => {
     res.status(200).json({ message: "Project marked as completed", project });
   } catch (error) {
     console.error("Complete Project Error:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to complete project", error: error.message });
+    res.status(500).json({
+      message: "Failed to complete project",
+      error: error.message,
+    });
   }
 };
+
 
 // ✅ GET ALL PROJECTS
 export const getAllProjects = async (req, res) => {

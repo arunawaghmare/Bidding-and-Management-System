@@ -14,6 +14,11 @@ const router = express.Router();
 router.get("/", getAllProjects);
 router.post("/", auth, createProject);
 router.post("/select", auth, selectSeller);
-router.post("/projects/complete", auth, upload.single("file"), completeProject);
+router.post(
+  "/projects/complete/:projectId",
+  auth,
+  upload.single("file"),
+  completeProject
+);
 
 export default router;

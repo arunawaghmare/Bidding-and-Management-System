@@ -70,11 +70,10 @@ export default function SellerPage() {
 
     const token = localStorage.getItem("token");
     const formData = new FormData();
-    formData.append("projectId", selectedProjectId.toString());
     formData.append("file", form.file);
 
     try {
-      await axios.post("/projects/complete", formData, {
+      await axios.post(`/projects/complete/${selectedProjectId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -86,6 +85,7 @@ export default function SellerPage() {
       alert("❌ Upload failed.");
     }
   };
+  
 
   const handleReviewSubmit = async (projectId: number) => {
     try {
