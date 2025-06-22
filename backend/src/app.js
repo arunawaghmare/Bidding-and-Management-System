@@ -10,10 +10,10 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS Setup: Allow Vercel frontend
+// ✅ CORS Setup: Allow frontend on Vercel
 app.use(
   cors({
-    origin: ["https://bidding-and-management-system-qt4296d2m.vercel.app/"],
+    origin: ["https://bidding-and-management-system.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -24,11 +24,11 @@ app.use(express.json());
 
 // ✅ Routes
 app.use("/api/auth", authRoutes); // POST /api/auth/signup
-app.use("/api/projects", projectRoutes); // GET /api/projects
+app.use("/api/projects", projectRoutes); // CRUD /api/projects
 app.use("/api/bids", bidRoutes); // POST /api/bids
-app.use("/api", reviewRoutes); // GET /api/reviews/me etc.
+app.use("/api", reviewRoutes); // POST /api/review
 
-// ✅ Default fallback route (optional)
+// ✅ Root Route
 app.get("/", (req, res) => {
   res.send("Seller-Buyer Bidding System API is running.");
 });
