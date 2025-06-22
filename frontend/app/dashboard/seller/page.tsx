@@ -70,10 +70,11 @@ export default function SellerPage() {
 
     const token = localStorage.getItem("token");
     const formData = new FormData();
+    formData.append("projectId", selectedProjectId.toString());
     formData.append("file", form.file);
 
     try {
-      await axios.post(`/complete/${selectedProjectId}`, formData, {
+      await axios.post("/projects/complete", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
